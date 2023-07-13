@@ -112,12 +112,19 @@ export const CartPage = styled('div', {
 export const ContainerCart = styled('div', {
   width: 384,
   minHeight: '100%',
-  maxHeight: '100vh',
+  height: 'calc(100vh - 120px)',
   margin: '0 auto',
   display: 'flex',
   flexDirection: 'column',
-  gap: 24,
-  overflowY: 'auto'
+  justifyContent: 'space-between',
+
+  overflowY: 'auto', 
+
+  '& > div': {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 24,
+  }
 })
 
 export const ContainerItem = styled('div', {
@@ -170,4 +177,49 @@ export const ContainerInfo = styled('div', {
     }
   }
   
+})
+
+export const ContainerTotal = styled('div', {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: 20,
+  
+  '& > div': {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    '&:first-child': {
+      fontSize: '1rem',
+      color: '$gray100',
+      '& > span': {
+       
+        fontSize: '1.125rem'
+      }
+    },
+    '&:last-child': {
+      fontSize: '1.125rem',
+      color: '$gray100',
+      '& > span': {
+        fontWeight: 'bold',
+        fontSize: '1.5rem'
+      }
+    },
+    
+  },
+  '& > button': {
+    background: '$green500',
+    color: '$gray100',
+    height: 69,
+    width: '100%',
+    border: 'none',
+    borderRadius: 8,
+
+    fontSize: '1.125rem',
+    fontWeight: 'bold',
+    '&:hover': {
+      cursor: 'pointer',
+      background: '$green300',
+    }
+  }
+
 })

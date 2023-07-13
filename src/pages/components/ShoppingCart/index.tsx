@@ -1,5 +1,5 @@
 import { ShoppingCartContext } from "@/contexts"
-import { CartPage, ContainerCart, ContainerInfo, ContainerItem, ImageContainer } from "./style"
+import { CartPage, ContainerCart, ContainerInfo, ContainerItem, ContainerTotal, ImageContainer } from "./style"
 import { useContext } from "react"
 
 export function ShoppingCart() {
@@ -30,6 +30,9 @@ export function ShoppingCart() {
           <button>Remover</button>
         </ContainerInfo>
       </ContainerItem>
+      <ContainerTotal>
+        <div><span>Quantidade</span> <span>3 itens</span></div>
+      </ContainerTotal>
       </ContainerCart>
   
   )

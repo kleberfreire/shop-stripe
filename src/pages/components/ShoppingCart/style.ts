@@ -64,3 +64,8 @@ export const ContainerInfo = styled('div', {
   }
   
 })
+
+export const ContainerTotal = styled('div', {
+  display: 'flex',
+  gap: 20
+})
