@@ -124,6 +124,12 @@ export const ContainerCart = styled('div', {
     display: 'flex',
     flexDirection: 'column',
     gap: 24,
+  },
+  '& > p': {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 'calc(100vh - (100vh * 0.63))',
   }
 })
 
@@ -220,6 +226,25 @@ export const ContainerTotal = styled('div', {
       cursor: 'pointer',
       background: '$green300',
     }
-  }
+  },
+  button: { 
+    marginTop: 'auto',
+    backgroundColor: '$green500',
+    border: 0,
+    color: '$white',
+    borderRadius: 8,
+    padding: '1.25rem',
+    cursor: 'pointer',
+    fontWeight: 'bold',
+    fontSize: '$md',
+    
+    '&:disabled': {
+      opacity: 0.6,
+      cursor: 'not-allowed',
+    },
 
+    '&:not(:disabled):hover': {
+      backgroundColor: '$green300',
+    }
+  },
 })

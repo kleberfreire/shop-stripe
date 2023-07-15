@@ -1,3 +1,4 @@
+import axios from 'axios';
 import * as React from 'react';
 import { createContext, useReducer } from "react";
 
@@ -7,6 +8,7 @@ interface itemCart  {
   price: number,
   quantity: number,
   imageUrl: string
+  defaultPriceId: string
   // currency: "GBP",
 }
 
@@ -34,6 +36,7 @@ interface shoppingCartContextProps {
   state: shoppingCartStateProps
   handleAddInCart: (item: itemCart) => void
   handleRemoveInCart: (id: string) => void
+  handleCheckout: () => void
 }
 
 
@@ -60,7 +63,9 @@ export function ShoppingCartProvider({children}: shoppingCartProviderProps) {
           ...state,
           cartList: [...state.cartList, payload],
           amount: [...state.cartList, payload].length,
-          total: 0
+          total: [...state.cartList, payload].reduce((acc, curr) => {
+            return acc + curr.price
+          },0)
         } 
       case actionsPayload.REMOVE_PRODUCT:
         return {
@@ -98,13 +103,35 @@ export function ShoppingCartProvider({children}: shoppingCartProviderProps) {
     // setCartList(prevState => prevState.filter(item => item.id !== id))
   }
 
+  async function handleCheckout() {
+    try {
+ 
+      const listPricesId = state.cartList.map(p => ({
+        price: p.defaultPriceId,
+        quantity: 1
+      }))
+     
+      const response = await axios.post('/api/checkout', {
+        data: listPricesId
+      }) 
+    
+      const { checkoutUrl } = response.data
+
+
+      window.location.href = checkoutUrl
+    } catch (error) {
+
+      alert('Falha ao adicionar product')
+    }
+  }
 
   return <>
     <ShoppingCartContext.Provider 
       value={{  
         state,
         handleAddInCart,
-        handleRemoveInCart
+        handleRemoveInCart,
+        handleCheckout
       }}
     >
       {children}

@@ -32,8 +32,6 @@ export default  function Product({ product }: ProductProps) {
   if (isFallback) {
     return <div>Loading...</div>
   }
-  console.log(product.price)
-
   async function handleByProduct() {
 
     handleAddInCart({
@@ -41,7 +39,8 @@ export default  function Product({ product }: ProductProps) {
         name: product.name,
         price: product.price,
         imageUrl: product.imagesUrl,
-        quantity: 1
+        quantity: 1,
+        defaultPriceId: product.defaultPriceId
       })      
   }
 

@@ -1,5 +1,5 @@
 import { stripe } from "@/lib/stripe";
-import { ImageContainer, SuccessContainer } from "@/styles/pages/success";
+import { ImageContainer, ImagesListContainer, SuccessContainer } from "@/styles/pages/success";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,14 +8,11 @@ import Stripe from "stripe";
 
 interface SuccessProps {
   customerName: string
-  product: {
-    name: string
-      image:string
-  }
+  product: Stripe.LineItem[]
 }
 
 export default function Success({customerName, product}: SuccessProps) {
-  console.log(customerName, product);
+ 
   return (
     <>
       <Head>
@@ -25,10 +22,18 @@ export default function Success({customerName, product}: SuccessProps) {
 
     <SuccessContainer>
       <h1>Compra efetuada!</h1>
-      <ImageContainer>
+      <ImagesListContainer>
+        {product.map((p )=> {
+          return (<ImageContainer key={p.id}>
+            {/* @ts-ignore */}
+            <Image src={`${p?.price?.product?.images[0]}`} alt="" width={120} height={110}/>
+          </ImageContainer>)
+        })}
+      </ImagesListContainer>
+      {/* <ImageContainer>
         <Image src={product.image} alt="" width={120} height={110}/>
-      </ImageContainer>
-      <p>Uhuul <strong>{customerName}</strong>, sua <strong>{product.name}</strong> the Limits já está a caminho da sua casa. </p>
+      </ImageContainer> */}
+      <p>Uhuul <strong>{customerName}</strong>, sua compra de {product.length} camisetas já está a caminho da sua casa. </p>
       <Link href="/">
         Voltar ao catálogo
       </Link>
@@ -50,18 +55,19 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const session = await stripe.checkout.sessions.retrieve(sessionId, {
     expand: ['line_items', 'line_items.data.price.product']
   })
-  console.log(session)
 
   const customerName = session.customer_details?.name
-  const product = session.line_items?.data[0].price?.product as Stripe.Product
+  // const product = session.line_items?.data[0].price?.product as Stripe.Product
+  const product = session.line_items?.data as Stripe.LineItem[]
 
   return {
     props: {
       customerName,
-      product: {
-        name: product?.name,
-        image: product.images[0]
-      },
+      // product: {
+      //   name: product?.name,
+      //   image: product.images[0]
+      // },
+      product
     }
   }
 }

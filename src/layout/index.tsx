@@ -10,6 +10,8 @@ import Link from 'next/link'
 
 import { ShoppingCartContext } from '@/contexts'
 import { useContext, useState } from 'react'
+import { formatePricePtBr } from '@/util/formatPrice';
+import axios from 'axios';
 
 interface Layout {
   children: React.ReactElement<any, any>
@@ -17,8 +19,10 @@ interface Layout {
 
 export function Layout({ children }: Layout) {
   const [ openCart, setOpenCart] = useState(false)
+  const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] = useState(false)
 
-  const { state, handleRemoveInCart } = useContext(ShoppingCartContext)
+  const { state, handleRemoveInCart, handleCheckout } = useContext(ShoppingCartContext)
+
   return (
     <>
       <Container>
@@ -38,6 +42,9 @@ export function Layout({ children }: Layout) {
            <button onClick={() => setOpenCart(false)}><img src={closeIcon.src} alt="close" /></button> 
           </div>
         <ContainerCart> 
+         {state.cartList.length > 0 ?
+        (
+          <>
           <div>
             {state.cartList.length > 0 && state.cartList.map((cartItem, index) =>{
               return (
@@ -46,18 +53,27 @@ export function Layout({ children }: Layout) {
                   <Image src={cartItem.imageUrl} width={90} height={85} alt=""/>
                 </ImageContainer>
                 <ContainerInfo>
-                  <h2>Camiseta Beyond the Limits</h2>
-                  <span>R$ 79,90</span>
+                  <h2>{cartItem.name}</h2>
+                  <span>{formatePricePtBr(cartItem.price)}</span>
                   <button onClick={() => handleRemoveInCart(cartItem.id)}>Remover</button>
                 </ContainerInfo>
               </ContainerItem>)
             })}
           </div>
             <ContainerTotal>
-              <div><p>Quantidade</p> <span>3 itens</span></div>
-              <div><p>Valor total</p> <span>R$ 270,00</span></div>
-              <button>Finalizar compra</button>
+              <div><p>Quantidade</p> <span>{state.cartList.length} {state.cartList.length > 1 ? 'itens': 'item'}</span></div>
+              <div><p>Valor total</p> <span>{formatePricePtBr(state.total)}</span></div>
+              <button 
+                disabled={isCreatingCheckoutSession || state.cartList.length < 1}
+                onClick={handleCheckout}
+              >
+                Finalizar compra
+              </button>
             </ContainerTotal>
+          </>
+          ): (
+            <p>Nenhum item no carrinho!</p>
+          )}
         </ContainerCart>
         </CartPage> 
     </>
